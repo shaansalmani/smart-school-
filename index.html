@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Smart School Control Center</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">SMART SCHOOL</div>
+      <h1>Control Center</h1>
+    </div>
+    <div class="status-wrap">
+      <span id="cloudDot" class="dot offline"></span>
+      <span id="cloudStatus">Cloud offline</span>
+      <span class="divider"></span>
+      <span id="bridgeDot" class="dot offline"></span>
+      <span id="bridgeStatus">Bridge offline</span>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div>
+        <span class="pill">PHONE → SUPABASE → LAPTOP → ARDUINO</span>
+        <h2>Smart School Automation</h2>
+        <p>Control your Arduino from this website. The laptop bridge listens for commands and sends them to the Arduino through USB.</p>
+      </div>
+      <button class="ghost" id="settingsBtn">Connection Settings</button>
+    </section>
+
+    <section class="grid">
+      <article class="control-card">
+        <div class="card-head"><span class="icon">🚪</span><div><h3>Main Gate</h3><small>Servo / gate actuator</small></div></div>
+        <div class="actions">
+          <button class="control open" data-device="mainGate" data-command="ON">OPEN</button>
+          <button class="control stop" data-device="mainGate" data-command="OFF">CLOSE</button>
+        </div>
+        <div class="state">State: <b id="state-mainGate">OFF</b></div>
+      </article>
+
+      <article class="control-card">
+        <div class="card-head"><span class="icon">💡</span><div><h3>Classroom Light</h3><small>Digital output</small></div></div>
+        <div class="actions">
+          <button class="control on" data-device="classroomLight" data-command="ON">ON</button>
+          <button class="control stop" data-device="classroomLight" data-command="OFF">OFF</button>
+        </div>
+        <div class="state">State: <b id="state-classroomLight">OFF</b></div>
+      </article>
+
+      <article class="control-card">
+        <div class="card-head"><span class="icon">🏫</span><div><h3>Smart Board</h3><small>Digital output</small></div></div>
+        <div class="actions">
+          <button class="control on" data-device="smartBoard" data-command="ON">ON</button>
+          <button class="control stop" data-device="smartBoard" data-command="OFF">OFF</button>
+        </div>
+        <div class="state">State: <b id="state-smartBoard">OFF</b></div>
+      </article>
+
+      <article class="control-card">
+        <div class="card-head"><span class="icon">💧</span><div><h3>Water Pump</h3><small>Motor / relay</small></div></div>
+        <div class="actions">
+          <button class="control on" data-device="waterPump" data-command="ON">ON</button>
+          <button class="control stop" data-device="waterPump" data-command="OFF">OFF</button>
+        </div>
+        <div class="state">State: <b id="state-waterPump">OFF</b></div>
+      </article>
+    </section>
+
+    <section class="console">
+      <div class="section-title"><h3>Live Command Log</h3><button class="mini" id="clearLog">Clear</button></div>
+      <div id="log" class="log"><div class="muted">No commands yet.</div></div>
+    </section>
+
+    <section class="how">
+      <h3>How this version works</h3>
+      <div class="flow">
+        <span>📱 Phone</span><b>→</b><span>🌐 Website</span><b>→</b><span>☁️ Supabase Realtime</span><b>→</b><span>💻 Laptop Bridge</span><b>→</b><span>🔌 Arduino USB</span>
+      </div>
+      <p class="muted">The browser does not try to access a COM port on the phone. The laptop bridge is responsible for USB/serial communication.</p>
+    </section>
+  </main>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" id="settingsForm" class="settings">
+      <button class="close" value="cancel">×</button>
+      <h2>Connection Settings</h2>
+      <p class="muted">Paste your Supabase Project URL and anon/publishable key. Never put a service-role key here.</p>
+      <label>Supabase URL<input id="supabaseUrl" type="url" placeholder="https://xxxx.supabase.co"></label>
+      <label>Supabase anon/publishable key<input id="supabaseKey" type="password" placeholder="eyJ..."></label>
+      <label>Realtime channel<input id="channelName" value="smart-school-arduino"></label>
+      <div class="settings-actions">
+        <button class="ghost" value="cancel">Cancel</button>
+        <button class="primary" value="default" id="saveSettings">Save & Connect</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
